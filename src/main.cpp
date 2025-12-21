@@ -20,7 +20,7 @@ json readJsonFile(const string& filename) {
     ifstream file(filename);
     json data;
     if (!file.is_open()) {
-        cout << "отсутсвует JSON отчет";
+        cout << "отсутсвует JSON отчет. Создайте JSON файл с названием: data_{number}.json в папке с программой.";
     }
     else {
         file >> data;
@@ -121,7 +121,6 @@ void validateData(const json& data) {
 }
 
 void analyzeSensorData(const json& data, const string& sensorFilter, int windowSize, bool timecheck) {
-    auto startMedian = chrono::high_resolution_clock::now();
     vector<double> values;
 
 
@@ -137,7 +136,7 @@ void analyzeSensorData(const json& data, const string& sensorFilter, int windowS
         return;
     }
 
-
+    auto startMedian = chrono::high_resolution_clock::now();
     double sum = 0;
     double minVal = values[0];
     double maxVal = values[0];
