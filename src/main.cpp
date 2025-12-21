@@ -20,7 +20,7 @@ json readJsonFile(const string& filename) {
     ifstream file(filename);
     json data;
     if (!file.is_open()) {
-        cout << "missing sensor JSON report";
+        cout << "отсутсвует JSON отчет";
     }
     else {
         file >> data;
@@ -101,21 +101,21 @@ void validateData(const json& data) {
 
     for (const auto& item : data) {
         if (!item.contains("ts")) {
-            cout << "Missing ts\n";
+            cout << "отсутсвует ts" << endl;
             continue;
         }
 
         string ts = item["ts"];
         if (!timestamps.insert(ts).second)
-            cout << "Duplicate ts: " << ts << "\n";
+            cout << "Дубликат ts: " << ts << endl;
 
         if (!item.contains("value") || !item["value"].is_number()) {
-            cout << "Invalid value type\n";
+            cout << "Неверный тип value" << endl;
         }
         else {
             double value = item["value"];
             if (value < 0 || value > 100)
-                cout << "Invalid value range: " << value << "\n";
+                cout << "Невозможное значение value: " << value << endl;
         }
     }
 }
@@ -133,7 +133,7 @@ void analyzeSensorData(const json& data, const string& sensorFilter, int windowS
     }
 
     if (values.empty()) {
-        cout << "No data for sensor " << sensorFilter << endl;
+        cout << "Нет данных для сенсора " << sensorFilter << endl;
         return;
     }
 
@@ -143,8 +143,12 @@ void analyzeSensorData(const json& data, const string& sensorFilter, int windowS
     double maxVal = values[0];
     for (double v : values) {
         sum += v;
-        if (v < minVal) minVal = v;
-        if (v > maxVal) maxVal = v;
+        if (v < minVal) {
+            minVal = v;
+        }
+        if (v > maxVal) {
+            maxVal = v;
+        }
     }
     double avg = sum / values.size();
 
@@ -178,32 +182,33 @@ void analyzeSensorData(const json& data, const string& sensorFilter, int windowS
     auto endWindow = chrono::high_resolution_clock::now();
     auto windowDuration = chrono::duration_cast<chrono::microseconds>(endWindow - startWindow).count();
 
-    cout << "\n===== SUMMARY =====\n";
-    cout << "Sensor: " << sensorFilter << endl;
-    cout << "Count: " << values.size() << endl;
+    cout << endl << "===== ОТЧЕТ =====" << endl;
+    cout << "Сенсор: " << sensorFilter << endl;
+    cout << "Количество: " << values.size() << endl;
     cout << "Min: " << minVal << endl;
     cout << "Max: " << maxVal << endl;
-    cout << "Average: " << avg << endl;
-    cout << "Median: " << median << endl;
-    cout << "Anomalies found: " << anomalies.size() << endl;
+    cout << "Среднее: " << avg << endl;
+    cout << "Медиана: " << median << endl;
+    cout << "Аномалий найдено: " << anomalies.size() << endl;
 
     if (!anomalies.empty()) {
-        cout << "\nAnomaly list:\n";
+        cout << endl << "СПИСОК АНОМАЛИЙ:" << endl;
         for (int idx : anomalies)
             cout << "Index " << idx << ", value = " << values[idx] << endl;
     }
-    cout << "----------------------\n";
+    cout << "----------------------" << endl;
 
 
 
     if (timecheck == 1) {
-        cout << "Median calculation time: " << medianDuration << " microseconds" << endl;
-        cout << "Sliding window calculation time: " << windowDuration << " microseconds" << endl;
+        cout << "Время вычисления медианы: " << medianDuration << " microseconds" << endl;
+        cout << "Время вычисления скользящего окна: " << windowDuration << " microseconds" << endl;
     }
 }
 
 
 int main() {
+    setlocale(LC_ALL, "");
 
 
 
@@ -216,60 +221,71 @@ int main() {
     cout << R"(                                                             |__/ )" << endl;
 
     cout << "------------------------------------------------------------------" << endl;
-    cout << "Create JSON files named: data_{number}.json" << endl << "file number start from 0" << endl;
+    cout << "Создайте JSON файл с названием: data_{number}.json" << endl << "Исчисление файлов начинается с нуля" << endl;
 
     while (true) {
-        cout << "Choose option" << endl;
-        cout << "1) Functions" << endl;
-        cout << "2) Debug mode" << endl;
-        cout << "3) Exit programm" << endl;
+        cout << "Выберите действие" << endl;
+        cout << "1) Замер мин, макс, сред значения, медианы и нахождения аномалий" << endl;
+        cout << "2) Режим отладки" << endl;
+        cout << "3) Выйти из программы" << endl;
         string choose;
         cin >> choose;
         if (choose == "2") {
-            cout << "Choose option" << endl;
-            cout << "1) Generate JSON examples with errors" << endl;
-            cout << "2) Generate JSON examples without errors" << endl;
-            cout << "3) Check calculation time" << endl;
+            cout << "Выберите действие" << endl;
+            cout << "1) Сгенерировать JSON файлы с ошибками" << endl;
+            cout << "2) Сгенерировать JSON файлы без ошибок" << endl;
+            cout << "3) Проверить время измерения" << endl;
             cin >> choose;
             if (choose == "1") {
-                cout << "enter amount of files" << endl;
+                cout << "Введите количество файлов" << endl;
                 int amount;
                 cin >> amount;
                 generateJsonFiles(amount);
-                cout << amount << "files generated" << endl;
+                cout << amount << " файлов сгенерировано" << endl;
             }
             else if (choose == "2") {
-                cout << "enter amount of files" << endl;
+                cout << "Введите количество файлов" << endl;
                 int amount;
                 cin >> amount;
                 generateCorrectJsonFiles(amount);
-                cout << amount << "files generated" << endl;
+                cout << amount << " файлов сгенерировано" << endl;
             }
             else if (choose == "3") {
-                cout << "Enter amount of files" << endl;
+                cout << "Введите количество файлов" << endl;
                 int amount2;
                 cin >> amount2;
                 string sensorFilter;
-                cout << "Enter sensor name (example s1): ";
+                cout << "Введите название сенсора (пример: s1): ";
                 cin >> sensorFilter;
 
                 int windowSize;
-                cout << "Enter window size (number of points): ";
+                cout << "Введите размер окна: ";
                 cin >> windowSize;
-
+                auto totalStart = chrono::high_resolution_clock::now();
                 for (int i = 0; i < amount2; i++) {
+                   
                     string filename = "data_" + to_string(i) + ".json";
                     ifstream test(filename);
                     if (!test.is_open()) continue;
 
                     json data = readJsonFile(filename);
-                    cout << "Analyzing " << filename << "\n";
+                    cout << "Анализ " << filename << "\n";
                     analyzeSensorData(data, sensorFilter, windowSize, 1);
+
                 }
+                auto totalEnd = chrono::high_resolution_clock::now();
+                auto totalDuration = chrono::duration_cast<chrono::milliseconds>(totalEnd - totalStart).count();
+
+                cout << "\n===== ЗАМЕР ВРЕМЕНИ =====\n";
+                cout << "Файлов проверено: " << amount2 << endl;
+                cout << "Время анализа: " << totalDuration << " мс\n";
+            }
+            else {
+                cout << "Неккоректный выбор(1-3!)" << endl;
             }
         }
         else if (choose == "1") {
-            cout << "Valid checking files" << endl << "Enter amount of files" << endl;
+            cout << "Проверка валидности" << endl << "Введите количество " << endl;
             int amount2;
             cin >> amount2;
             for (int i = 0; i < amount2; i++) {
@@ -277,16 +293,16 @@ int main() {
                 string filename = "data_" + to_string(i) + ".json";
                 json data = readJsonFile(filename);
 
-                cout << "Checking " << filename << "\n";
+                cout << "Проверка " << filename << "\n";
                 validateData(data);
                 cout << "----------------\n";
             }
             string sensorFilter;
-            cout << "Enter sensor name (example s1): ";
+            cout << "Введите название сенсора (пример: s1): ";
             cin >> sensorFilter;
 
             int windowSize;
-            cout << "Enter window size (number of points): ";
+            cout << "Введите размер окна: ";
             cin >> windowSize;
 
             for (int i = 0; i < amount2; i++) {
@@ -295,7 +311,7 @@ int main() {
                 if (!test.is_open()) continue;
 
                 json data = readJsonFile(filename);
-                cout << "Analyzing " << filename << "\n";
+                cout << "Анализ " << filename << "\n";
                 analyzeSensorData(data, sensorFilter, windowSize, 0);
             }
 
@@ -304,7 +320,7 @@ int main() {
             return 0;
         }
         else {
-            cout << "unknown option(1-2!)";
+            cout << "Неккоректный выбор (1-3!)";
         }
 
     }
