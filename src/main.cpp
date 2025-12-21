@@ -304,7 +304,7 @@ int main() {
             return 0;
         }
         else {
-            cout << "unknown option(1-2!)";
+            cout << "unknown option(1-3!)";
         }
 
     }
