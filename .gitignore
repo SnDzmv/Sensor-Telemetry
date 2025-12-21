@@ -1,0 +1,44 @@
+# Игнорировать все exe файлы
+*.exe
+
+# Игнорировать папку release с собранными файлами
+release/
+
+# Игнорировать временные папки сборки Visual Studio
+Debug/
+Release/
+x64/
+x86/
+
+# Visual Studio временные и пользовательские файлы
+*.user
+*.suo
+*.vcxproj.user
+*.vcxproj.filters
+*.ncb
+*.opensdf
+*.sdf
+*.ipch
+*.ilk
+*.pdb
+
+# Логи
+*.log
+
+# C++ объектные файлы
+*.obj
+
+# Другие файлы компиляции
+*.idb
+*.tlog
+*.lastbuildstate
+*.iobj
+
+# Игнорировать автоматические backup файлы
+*~ 
+*.tmp
+*.bak
+
+# Игнорировать скрытые системные файлы Windows
+Thumbs.db
+Desktop.ini
