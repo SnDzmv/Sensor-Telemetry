@@ -83,6 +83,9 @@ Index 3, value = 92.4186
 
 ---
 
+<img width="575" height="930" alt="image" src="https://github.com/user-attachments/assets/481a587d-b665-4a60-bbb9-4b81c7434f7c" />
+
+
 Дополнительно
 
 В docs/Implementation_Plan.md — план реализации проекта
