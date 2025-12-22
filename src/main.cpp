@@ -26,7 +26,7 @@ json readJsonFile(const string& filename) {
         file >> data;
         return data;
     }
-    
+
 }
 
 void generateJsonFiles(int fileCount) {
@@ -181,21 +181,24 @@ void analyzeSensorData(const json& data, const string& sensorFilter, int windowS
     auto endWindow = chrono::high_resolution_clock::now();
     auto windowDuration = chrono::duration_cast<chrono::microseconds>(endWindow - startWindow).count();
 
-    cout << endl << "===== ОТЧЕТ =====" << endl;
-    cout << "Сенсор: " << sensorFilter << endl;
-    cout << "Количество: " << values.size() << endl;
-    cout << "Min: " << minVal << endl;
-    cout << "Max: " << maxVal << endl;
-    cout << "Среднее: " << avg << endl;
-    cout << "Медиана: " << median << endl;
-    cout << "Аномалий найдено: " << anomalies.size() << endl;
 
-    if (!anomalies.empty()) {
-        cout << endl << "СПИСОК АНОМАЛИЙ:" << endl;
-        for (int idx : anomalies)
-            cout << "Index " << idx << ", value = " << values[idx] << endl;
+    if (timecheck == 0) {
+        cout << endl << "===== ОТЧЕТ =====" << endl;
+        cout << "Сенсор: " << sensorFilter << endl;
+        cout << "Количество: " << values.size() << endl;
+        cout << "Min: " << minVal << endl;
+        cout << "Max: " << maxVal << endl;
+        cout << "Среднее: " << avg << endl;
+        cout << "Медиана: " << median << endl;
+        cout << "Аномалий найдено: " << anomalies.size() << endl;
+
+        if (!anomalies.empty()) {
+            cout << endl << "СПИСОК АНОМАЛИЙ:" << endl;
+            for (int idx : anomalies)
+                cout << "Index " << idx << ", value = " << values[idx] << endl;
+        }
+        cout << "----------------------" << endl;
     }
-    cout << "----------------------" << endl;
 
 
 
@@ -262,7 +265,7 @@ int main() {
                 cin >> windowSize;
                 auto totalStart = chrono::high_resolution_clock::now();
                 for (int i = 0; i < amount2; i++) {
-                   
+
                     string filename = "data_" + to_string(i) + ".json";
                     ifstream test(filename);
                     if (!test.is_open()) continue;
@@ -323,7 +326,6 @@ int main() {
         }
 
     }
-    
-}
 
+}
 
